@@ -34,3 +34,15 @@
 .end {
   background-color: red;
 }
+
+.visited {
+  background-color: blue;
+}
+
+.path {
+  background-color: yellow;
+}
+
+.current {
+  background-color: orange;
+}
