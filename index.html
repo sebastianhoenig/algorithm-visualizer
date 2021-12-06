@@ -8,9 +8,32 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <button onclick="startVisualizer()">Start BFS Visualizer</button>
-    <button onclick="clearGrid()">Clear Grid</button>
-    <div class="container"></div>
+    <div class="visualizer">
+      <div class="text">
+        <h1>How to use the Visualizer</h1>
+        <ul>
+          <li>Select a cell on the grid to choose the start and end node</li>
+          <li>
+            Optionally, you can also add walls by clicking additional cells
+          </li>
+          <li>Click on Start to visualize the desired alogrithm</li>
+          <li>
+            After the algorithm has found the shortest path, clear the grid
+            <br />
+            to start again!
+          </li>
+        </ul>
+      </div>
+      <div class="container">
+        <div class="buttons">
+          <button class="button" onclick="startBfs()">
+            Start BFS Visualizer
+          </button>
+          <button class="button" onclick="clearGrid()">Clear Grid</button>
+        </div>
+        <div class="grid"></div>
+      </div>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>

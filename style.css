@@ -3,17 +3,51 @@
   padding: 0;
 }
 
+.visualizer {
+  margin: 100px auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+h1 {
+  text-align: center;
+  color: blueviolet;
+}
+
+ul ul {
+  list-style-position: inside;
+}
+
+ul ul ::marker {
+  color: violet;
+}
 .container {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  width: 960px;
+}
+
+.buttons {
+  margin: 0 auto;
+  width: 960px;
+  display: flex;
+  flex-direction: row;
+}
+
+.grid {
   width: 960px;
   height: 450px;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  margin: 100px auto;
+  margin: 0 auto;
 }
 
 .cell {
-  border: 1px solid gray;
+  border: 1px solid rgb(216, 209, 209);
   width: 20px;
   height: 20px;
   margin: 0;
@@ -35,8 +69,38 @@
   background-color: red;
 }
 
+@keyframes exmaple {
+  from {
+    background-color: white;
+  }
+  to {
+    background-color: lightblue;
+  }
+}
 .visited {
-  background-color: blue;
+  animation-name: visitedAnimation;
+  animation-duration: 3s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes visitedAnimation {
+  0% {
+    background-color: rgba(66, 0, 63, 0.75);
+  }
+
+  50% {
+    background-color: rgba(17, 104, 217, 0.75);
+  }
+
+  75% {
+    transform: scale(1.2);
+    background-color: rgba(0, 217, 159, 0.75);
+  }
+
+  100% {
+    background-color: lightblue;
+  }
 }
 
 .path {
@@ -45,4 +109,22 @@
 
 .current {
   background-color: orange;
+}
+
+.wall {
+  background-color: darkslategrey;
+}
+
+.button {
+  background-color: rgb(56, 130, 246);
+  color: #e5e7eb;
+  border-radius: 8px;
+  border-color: #f9faf8;
+  padding: 5px 20px;
+  font-weight: bolder;
+}
+
+.button:hover {
+  color: white;
+  text-shadow: 0 0 5px #c0b8b8;
 }

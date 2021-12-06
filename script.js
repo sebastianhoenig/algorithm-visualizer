@@ -1,4 +1,4 @@
-const CONTAINER = document.getElementsByClassName("container")[0];
+const CONTAINER = document.getElementsByClassName("grid")[0];
 let rows = document.getElementsByClassName("row");
 let cells = document.getElementsByClassName("cell");
 
@@ -6,9 +6,6 @@ const NO_COLS = 50;
 const NO_ROWS = 20;
 let start_node_exists = false;
 let end_node_exists = false;
-
-//somehow classes?
-//if onclick doesnt work, do buttons with text field
 
 function setNode(div) {
   if (start_node_exists) {
@@ -28,6 +25,13 @@ function setEndNode(div) {
   div.classList.add("end");
 }
 
+function setWall(div) {
+  if (!div.getAttribute("start") && !div.getAttribute("end")) {
+    div.setAttribute("wall", "true");
+    div.classList.add("wall");
+  }
+}
+
 function createGrid(NO_ROWS, NO_COLS) {
   for (i = 0; i < NO_ROWS; i++) {
     let row_div = document.createElement("div");
@@ -38,16 +42,12 @@ function createGrid(NO_ROWS, NO_COLS) {
       cell_div.setAttribute("x", j.toString());
       cell_div.setAttribute("y", i.toString());
       cell_div.setAttribute("visited", "false");
+      cell_div.setAttribute("wall", "false");
       row_div.append(cell_div);
     }
     CONTAINER.append(row_div);
   }
 }
-
-/* function colourStartAndEnd(START_NODE, END_NODE) {
-  cells[START_NODE].classList.add("start");
-  cells[END_NODE].classList.add("end");
-} */
 
 async function doBfs(start_node, end_node) {
   if (start_node === end_node) {
@@ -60,17 +60,42 @@ async function doBfs(start_node, end_node) {
   while (queque) {
     let current_node = queque.shift();
     let neighbours = findNeighbours(current_node);
-    for (let neighbour of neighbours) {
-      neighbour.setAttribute("visited", "true");
-      neighbour.classList.add("current");
-      await sleep(200);
-      neighbour.classList.remove("current");
-      neighbour.classList.add("visited");
-      if (neighbour === end_node) {
-        visualizePath(end_node, start_node);
-        return neighbour;
-      } else {
-        queque.push(neighbour);
+    if (neighbours.length !== 0) {
+      for (let neighbour of neighbours) {
+        neighbour.setAttribute("visited", "true");
+        neighbour.classList.add("current");
+        await sleep(5);
+        neighbour.classList.remove("current");
+        neighbour.classList.add("visited");
+        if (neighbour === end_node) {
+          visualizePath(end_node, start_node);
+          return neighbour;
+        } else {
+          queque.push(neighbour);
+        }
+      }
+    }
+  }
+}
+
+async function doDfs(start_node, end_node) {
+  if (start_node === end_node) {
+    return;
+  }
+  let stack = [];
+  stack.push(start_node);
+  while (stack) {
+    let current_node = stack.pop();
+    current_node.setAttribute("visited", "true");
+    current_node.classList.add("visited");
+    if (current_node === end_node) {
+      visualizePath(end_node, start_node);
+      return end_node;
+    }
+    let neighbours = findNeighbours(current_node);
+    if (neighbours.length !== 0) {
+      for (let neighbour of neighbours) {
+        stack.push(neighbour);
       }
     }
   }
@@ -89,9 +114,11 @@ function findNeighbours(current_node) {
         "]"
     );
     if (left_neighbour.getAttribute("visited") == "false") {
-      left_neighbour.setAttribute("previous_x", x);
-      left_neighbour.setAttribute("previous_y", y);
-      neighbour_array.push(left_neighbour);
+      if (left_neighbour.getAttribute("wall") == "false") {
+        left_neighbour.setAttribute("previous_x", x);
+        left_neighbour.setAttribute("previous_y", y);
+        neighbour_array.push(left_neighbour);
+      }
     }
   }
   if (x != 49) {
@@ -103,9 +130,11 @@ function findNeighbours(current_node) {
         "]"
     );
     if (right_neighbour.getAttribute("visited") == "false") {
-      right_neighbour.setAttribute("previous_x", x);
-      right_neighbour.setAttribute("previous_y", y);
-      neighbour_array.push(right_neighbour);
+      if (right_neighbour.getAttribute("wall") == "false") {
+        right_neighbour.setAttribute("previous_x", x);
+        right_neighbour.setAttribute("previous_y", y);
+        neighbour_array.push(right_neighbour);
+      }
     }
   }
   if (y != 0) {
@@ -117,9 +146,11 @@ function findNeighbours(current_node) {
         "]"
     );
     if (top_neighbour.getAttribute("visited") == "false") {
-      top_neighbour.setAttribute("previous_x", x);
-      top_neighbour.setAttribute("previous_y", y);
-      neighbour_array.push(top_neighbour);
+      if (top_neighbour.getAttribute("wall") == "false") {
+        top_neighbour.setAttribute("previous_x", x);
+        top_neighbour.setAttribute("previous_y", y);
+        neighbour_array.push(top_neighbour);
+      }
     }
   }
   if (y != 19) {
@@ -131,9 +162,11 @@ function findNeighbours(current_node) {
         "]"
     );
     if (bottom_neighbour.getAttribute("visited") == "false") {
-      bottom_neighbour.setAttribute("previous_x", x);
-      bottom_neighbour.setAttribute("previous_y", y);
-      neighbour_array.push(bottom_neighbour);
+      if (bottom_neighbour.getAttribute("wall") == "false") {
+        bottom_neighbour.setAttribute("previous_x", x);
+        bottom_neighbour.setAttribute("previous_y", y);
+        neighbour_array.push(bottom_neighbour);
+      }
     }
   }
   return neighbour_array;
@@ -167,13 +200,20 @@ async function visualizePath(end_node, start_node) {
 }
 
 createGrid(NO_ROWS, NO_COLS);
-/* colourStartAndEnd(START_NODE, END_NODE); */
 
-function startVisualizer() {
+function startBfs() {
   if (start_node_exists && end_node_exists) {
     let start_node = document.getElementsByClassName("start")[0];
     let end_node = document.getElementsByClassName("end")[0];
     doBfs(start_node, end_node);
+  }
+}
+
+function startDfs() {
+  if (start_node_exists && end_node_exists) {
+    let start_node = document.getElementsByClassName("start")[0];
+    let end_node = document.getElementsByClassName("end")[0];
+    doDfs(start_node, end_node);
   }
 }
 
@@ -184,6 +224,8 @@ function clearGrid() {
     cell.setAttribute("visited", "false");
     cell.removeAttribute("previous_x");
     cell.removeAttribute("previous_y");
+    cell.setAttribute("wall", "false");
+    cell.classList.remove("wall");
     cell.classList.remove("start");
     cell.classList.remove("end");
     start_node_exists = false;
@@ -195,7 +237,7 @@ for (j = 0; j < cells.length; j++) {
   cells[j].addEventListener("click", function () {
     if (start_node_exists) {
       if (end_node_exists) {
-        alert("Exists!");
+        return;
       } else {
         setEndNode(this);
         end_node_exists = true;
@@ -203,6 +245,13 @@ for (j = 0; j < cells.length; j++) {
     } else {
       setStartNode(this);
       start_node_exists = true;
+    }
+  });
+  cells[j].addEventListener("mousemove", function (e) {
+    if (e.buttons == 1) {
+      if (start_node_exists && end_node_exists) {
+        setWall(this);
+      }
     }
   });
 }
