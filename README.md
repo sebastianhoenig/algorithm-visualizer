@@ -4,4 +4,4 @@ This repository contains a javascript based interactive algorithm visualizer, th
 
 ---
 
-<img width="400" alt="portfolio_view" src="![bfs]https://user-images.githubusercontent.com/90109108/145797700-53192bbf-6894-458d-a001-295739e9d39b.gif">
+![bfs](https://user-images.githubusercontent.com/90109108/145798117-78362a50-721e-48cb-af58-820176a83629.gif)
